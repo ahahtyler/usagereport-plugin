@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
 	"github.com/cloudfoundry/cli/plugin"
 	"github.com/krujos/usagereport-plugin/apihelper"
 )
