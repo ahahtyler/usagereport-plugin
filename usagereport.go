@@ -30,6 +30,9 @@ type app struct {
 	ram       int
 	instances int
 	running   bool
+	name string
+	buildpack string
+	buildpack_detected string
 }
 
 //GetMetadata returns metatada
@@ -55,7 +58,6 @@ func (cmd *UsageReportCmd) GetMetadata() plugin.PluginMetadata {
 
 //UsageReportCommand doer
 func (cmd *UsageReportCmd) UsageReportCommand(args []string) {
-	fmt.Println("Gathering usage information")
 
 	if nil == cmd.cli {
 		fmt.Println("ERROR: CLI Connection is nil!")
@@ -70,33 +72,38 @@ func (cmd *UsageReportCmd) UsageReportCommand(args []string) {
 
 	totalApps := 0
 	totalInstances := 0
+	fmt.Printf("App,Space,Org,Memory Usage,Total Instances, Status, Buildpack, Buildpack Detected\n")
 	for _, org := range orgs {
-		fmt.Printf("Org %s is consuming %d MB of %d MB.\n", org.name, org.memoryUsage, org.memoryQuota)
 		for _, space := range org.spaces {
 			consumed := 0
 			instances := 0
 			runningApps := 0
+			stoppedApps := 0
 			runningInstances := 0
+			var appStatus string
 			for _, app := range space.apps {
 				if app.running {
 					consumed += int(app.instances * app.ram)
 					runningApps++
 					runningInstances += app.instances
+					appStatus = "Running"
+				} else {
+					stoppedApps++
+					appStatus = "Stopped"
 				}
 				instances += int(app.instances)
+				fmt.Printf("%s,%s,%s,%d MB,%d,%s, %s, %s \n",
+					app.name, space.name, org.name, consumed, app.instances, appStatus, app.buildpack, app.buildpack_detected )
+
 			}
-			fmt.Printf("\tSpace %s is consuming %d MB memory (%d%%) of org quota.\n",
-				space.name, consumed, (100 * consumed / org.memoryQuota))
-			fmt.Printf("\t\t%d apps: %d running %d stopped\n", len(space.apps),
-				runningApps, len(space.apps)-runningApps)
-			fmt.Printf("\t\t%d instances: %d running, %d stopped\n", instances,
-				runningInstances, instances-runningInstances)
+			totalInstances += instances
+			totalApps += len(space.apps)
 			totalInstances += instances
 			totalApps += len(space.apps)
 		}
 	}
-	fmt.Printf("You are running %d apps in all orgs, with a total of %d instances.\n",
-		totalApps, totalInstances)
+
+	
 }
 
 func (cmd *UsageReportCmd) getOrgs() ([]org, error) {
@@ -163,6 +170,9 @@ func (cmd *UsageReportCmd) getApps(appsURL string) ([]app, error) {
 			instances: int(a.Instances),
 			ram:       int(a.RAM),
 			running:   a.Running,
+			name:	   a.Name,
+			buildpack: a.Buildpack,
+			buildpack_detected: a.BuildpackDetected,
 		})
 	}
 	return apps, nil

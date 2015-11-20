@@ -24,8 +24,11 @@ type App struct {
 	Instances float64
 	RAM       float64
 	Running   bool
+	Name 	  string
+	Buildpack string
+	BuildpackDetected string
 }
-
+ 
 //CFAPIHelper to wrap cf curl results
 type CFAPIHelper interface {
 	GetOrgs(plugin.CliConnection) ([]Organization, error)
@@ -104,15 +107,35 @@ func (api *APIHelper) GetSpaceApps(cli plugin.CliConnection, appsURL string) ([]
 	if nil != err {
 		return nil, err
 	}
+	
 	apps := []App{}
 	for _, a := range appsJSON["resources"].([]interface{}) {
 		theApp := a.(map[string]interface{})
 		entity := theApp["entity"].(map[string]interface{})
+		
+		bp := " "
+		bpd := " "
+		
+		if entity["buildpack"] == nil{
+			bp = "Not detected"
+		} else {
+			bp = entity["buildpack"].(string)
+		}
+		
+		if entity["detected_buildpack"] == nil {
+			bpd = "Not detected"
+		} else {
+			bpd = entity["detected_buildpack"].(string)			
+		}
+		
 		apps = append(apps,
 			App{
 				Instances: entity["instances"].(float64),
 				RAM:       entity["memory"].(float64),
 				Running:   "STARTED" == entity["state"].(string),
+				Name: 		entity["name"].(string),
+				Buildpack:  bp,
+				BuildpackDetected: bpd,
 			})
 	}
 	return apps, nil
