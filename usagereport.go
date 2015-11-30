@@ -37,7 +37,7 @@ type app struct {
 //GetMetadata returns metatada
 func (cmd *UsageReportCmd) GetMetadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
-		Name: "usage-report",
+		Name: "snapshot",
 		Version: plugin.VersionType{
 			Major: 1,
 			Minor: 0,
@@ -45,10 +45,10 @@ func (cmd *UsageReportCmd) GetMetadata() plugin.PluginMetadata {
 		},
 		Commands: []plugin.Command{
 			{
-				Name:     "usage-report",
+				Name:     "snapshot",
 				HelpText: "Report AI and memory usage for orgs and spaces",
 				UsageDetails: plugin.Usage{
-					Usage: "cf usage-report",
+					Usage: "cf snapshot",
 				},
 			},
 		},
@@ -69,6 +69,19 @@ func (cmd *UsageReportCmd) UsageReportCommand(args []string) {
 		os.Exit(1)
 	}
 
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Windows or Linux (w or l):")
+	env, _ := reader.ReadString('\n')
+	out_dir := " "
+	
+	if env.str == "l" or env.str == "L" {
+		out_dir = "/home/"
+	} else if env.str ="w" or env.str == "W" {
+		out_dir = "C:\Users\Public\Desktop"
+	} else {
+		out_dir = "Error"
+	}
+	
 	totalApps := 0
 	totalInstances := 0
 	fmt.Printf("App,Space,Org,Memory Usage,Total Instances, Status, Buildpack, Buildpack Detected\n")
@@ -179,7 +192,7 @@ func (cmd *UsageReportCmd) getApps(appsURL string) ([]app, error) {
 
 //Run runs the plugin
 func (cmd *UsageReportCmd) Run(cli plugin.CliConnection, args []string) {
-	if args[0] == "usage-report" {
+	if args[0] == "snapshot" {
 		cmd.apiHelper = &apihelper.APIHelper{}
 		cmd.cli = cli
 		cmd.UsageReportCommand(args)

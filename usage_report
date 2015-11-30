@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+
+<html dir="ltr" lang="en">
+<head>
+<title>Pivotal</title>
+    
+    <link href="/resources/pivotal/images/favicon.ico" rel="shortcut icon" />
+    <meta charset="utf-8" />
+    <meta name="author" content="Pivotal Software, Inc" />
+    <meta name="copyright" content="Copyright 2014 Pivotal Software, Inc. All Rights Reserved." />
+    <meta name="robots" content="all" />
+    <meta name="Description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/resources/pivotal/stylesheets/application.css" rel="stylesheet" />
+
+</head>
+<body>
+<div class="content">
+    <div class="header" style="background-image: url(/resources/pivotal/images/logo.png);"></div>
+    <div class="island">
+        <h1>Welcome!</h1>
+        <div class="island-content">
+            
+            <form method="post" novalidate="novalidate" action="/login.do">
+                
+                <input class="form-control" name="username" type="text" placeholder="Email" autocomplete="true" autofocus="autofocus" />
+                <input class="form-control" name="password" type="password" placeholder="Password" autocomplete="false" />
+                <input type="submit" value="Sign in" class="island-button" />
+            </form>
+            
+            <div class="saml-login">
+                
+                
+            </div>
+            <span class="left">
+                <a href="https://apps.cftpanpaz1.verizon.com/register" class="link-lowlight">Create account</a>
+            </span><span class="right">
+                <a href="https://apps.cftpanpaz1.verizon.com/password_resets/new" class="link-lowlight">Reset password</a>
+            </span>
+        </div>
+    </div>
+    <div class="footer-spacer"></div>
+</div>
+<div class="footer">
+    <div class="copyright" title="Version: 2.2.5.2, Commit: 04622a0, Timestamp: 2015-06-11T00:22:57-0700, UAA: https://uaa.cftpanpaz1.verizon.com">&#169; 2015 Pivotal Software, Inc. All Rights Reserved.</div>
+</div>
+
+
+    
+
+</body>
+</html>
